@@ -11,6 +11,8 @@ import cv2
 from PIL import Image, ImageTk
 import mcnn_model
 import cmtl_model
+import csrn_model
+import matplotlib.pyplot as plt
 
 class App:
     def __init__(self, window, cameraID = 1):
@@ -34,7 +36,7 @@ class App:
         
         
         #Select between models
-        optionListModels = ['MCNN', 'CMTL']
+        optionListModels = ['MCNN', 'CMTL', 'CSRN']
         self.currentModel = optionListModels[0]
         self.model = tk.StringVar()
         self.model.set(optionListModels[0])
@@ -90,10 +92,14 @@ class App:
     
     def reloadPrediction(self,img):
       
-        models = {'MCNN': mcnn_model.imgtest, 'CMTL' : cmtl_model.imgtest} 
+        models = {'MCNN': mcnn_model.imgtest, 'CMTL' : cmtl_model.imgtest, 'CSRN' : csrn_model.imgtest} 
         img, count= models[self.currentModel].getPrediction(img, self.currentPart)
+        plt.imshow(img)
+        plt.show()
+        print(img)
         img = cv2.resize(img, (self.width,self.height), interpolation = cv2.INTER_CUBIC)
-        
+        plt.imshow(img)
+        plt.show()
         self.photoPred = ImageTk.PhotoImage(image = Image.fromarray(img))
         self.canvasPredict.config(height = self.height, width = self.width)
         self.canvasPredict.create_image(0, 0, image=self.photoPred, anchor=tk.NW)
